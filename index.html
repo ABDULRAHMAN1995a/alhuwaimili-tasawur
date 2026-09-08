@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>تصور منصة مكتب الهويملي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    color-scheme: light dark;
+    --paper:#F6F4EF;
+    --surface:#FFFFFF;
+    --surface-2:#F0EDE5;
+    --ink:#211E19;
+    --ink-soft:#5F594E;
+    --ink-faint:#8B8373;
+    --accent:#2E5B4E;
+    --accent-line:#3C6E5F;
+    --accent-soft:#E4EDE8;
+    --brass:#9A7B4F;
+    --brass-text:#7E6236;
+    --amber:#9C6B15;
+    --line:#E1DBCE;
+    --line-strong:#CEC6B4;
+    --radius:10px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#161712;
+      --surface:#1E201A;
+      --surface-2:#24261E;
+      --ink:#ECE8DF;
+      --ink-soft:#ABA491;
+      --ink-faint:#7E7867;
+      --accent:#6FAA97;
+      --accent-line:#5B9483;
+      --accent-soft:#22302B;
+      --brass:#C39A62;
+      --brass-text:#C9A46F;
+      --amber:#D6A052;
+      --line:#302F26;
+      --line-strong:#3F3D31;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#161712;
+    --surface:#1E201A;
+    --surface-2:#24261E;
+    --ink:#ECE8DF;
+    --ink-soft:#ABA491;
+    --ink-faint:#7E7867;
+    --accent:#6FAA97;
+    --accent-line:#5B9483;
+    --accent-soft:#22302B;
+    --brass:#C39A62;
+    --brass-text:#C9A46F;
+    --amber:#D6A052;
+    --line:#302F26;
+    --line-strong:#3F3D31;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif;
+    font-size:16px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .doc{
+    max-width:54rem;
+    margin:0 auto;
+    padding:clamp(1.25rem,3vw,3rem) clamp(1.1rem,4vw,2.75rem) 5rem;
+  }
+
+  .masthead{
+    border-bottom:1px solid var(--brass);
+    padding-bottom:1.6rem;
+    margin-bottom:.4rem;
+    position:relative;
+  }
+  .masthead::after{
+    content:"";
+    position:absolute;
+    inset-inline-start:0;
+    bottom:-1px;
+    width:5.5rem;
+    height:3px;
+    background:var(--accent-line);
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    color:var(--brass-text);
+    margin:0 0 1rem;
+  }
+  .masthead h1{
+    font-family:"Amiri",Georgia,"Times New Roman",serif;
+    font-weight:700;
+    font-size:clamp(1.9rem,1.3rem+3vw,3rem);
+    line-height:1.15;
+    margin:0 0 .5rem;
+    text-wrap:balance;
+  }
+  .office-name{
+    color:var(--ink-soft);
+    font-size:1.02rem;
+    margin:0 0 1.3rem;
+    max-width:42ch;
+  }
+  .meta{display:flex;flex-wrap:wrap;gap:.5rem}
+  .chip{
+    font-size:.78rem;
+    color:var(--ink-soft);
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:.28rem .8rem;
+  }
+  .chip .k{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--brass-text)}
+
+  .lede{
+    margin:2rem 0 0;
+    padding:1.1rem 1.2rem;
+    background:var(--accent-soft);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    color:var(--ink);
+    font-size:.96rem;
+  }
+  .lede p{margin:.3rem 0}
+
+  .toc{
+    margin:2.75rem 0 1rem;
+    padding:1.4rem 1.4rem 1.6rem;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+  }
+  .toc h2{
+    font-size:.8rem;
+    letter-spacing:.12em;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    color:var(--brass-text);
+    margin:0 0 1rem;
+    font-weight:500;
+  }
+  .toc ol{
+    list-style:none;
+    margin:0;padding:0;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:.35rem 1.75rem;
+    counter-reset:toc;
+  }
+  .toc a{
+    color:var(--ink-soft);
+    text-decoration:none;
+    display:flex;
+    gap:.6rem;
+    padding:.15rem 0;
+    font-size:.92rem;
+  }
+  .toc a::before{
+    counter-increment:toc;
+    content:counter(toc);
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    color:var(--brass-text);
+    font-size:.8rem;
+    min-width:1.6ch;
+    text-align:end;
+  }
+  .toc a:hover{color:var(--accent)}
+
+  section{margin-top:3.25rem}
+  .sec-head{
+    display:flex;
+    gap:1rem;
+    align-items:baseline;
+    border-top:1px solid var(--line-strong);
+    padding-top:1.35rem;
+    margin-bottom:1.15rem;
+  }
+  .sec-num{
+    font-family:"Amiri",Georgia,serif;
+    font-size:1.55rem;
+    line-height:1;
+    color:var(--brass);
+    font-variant-numeric:tabular-nums;
+    min-width:2.2ch;
+  }
+  .sec-head h2{
+    font-size:clamp(1.2rem,1rem+.9vw,1.6rem);
+    font-weight:700;
+    margin:0;
+    text-wrap:balance;
+  }
+  h3{
+    font-size:1.02rem;
+    font-weight:600;
+    margin:1.9rem 0 .6rem;
+    display:flex;
+    align-items:center;
+    gap:.55rem;
+  }
+  h3::before{
+    content:"";
+    width:7px;height:7px;
+    background:var(--accent-line);
+    flex:none;
+  }
+  h4{
+    font-size:.9rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    margin:1.3rem 0 .4rem;
+  }
+  p{margin:.75rem 0}
+  a{color:var(--accent)}
+  strong{font-weight:600}
+
+  ul,ol{margin:.7rem 0;padding-inline-start:1.4rem}
+  li{margin:.35rem 0}
+  ul.plain{list-style:none;padding-inline-start:0}
+  ul.plain>li{padding-inline-start:1.3rem;position:relative}
+  ul.plain>li::before{
+    content:"";
+    position:absolute;
+    inset-inline-start:0;
+    top:.72em;
+    width:6px;height:6px;
+    background:var(--brass);
+    transform:rotate(45deg);
+  }
+
+  ul.excluded{list-style:none;padding-inline-start:0}
+  ul.excluded>li{color:var(--ink-soft);padding-inline-start:1.4rem;position:relative}
+  ul.excluded>li::before{content:"—";position:absolute;inset-inline-start:0;color:var(--ink-faint)}
+
+  ol.steps{list-style:none;padding-inline-start:0;counter-reset:step}
+  ol.steps>li{
+    counter-increment:step;
+    padding-inline-start:2.4rem;
+    position:relative;
+    margin:.5rem 0;
+  }
+  ol.steps>li::before{
+    content:counter(step);
+    position:absolute;
+    inset-inline-start:0;
+    top:.05em;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.8rem;
+    color:var(--accent);
+    border:1px solid var(--line-strong);
+    border-radius:6px;
+    width:1.7rem;height:1.55rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  ol.refs{list-style:none;padding-inline-start:0;counter-reset:ref}
+  ol.refs>li{
+    counter-increment:ref;
+    padding-inline-start:2.2rem;
+    position:relative;
+    margin:.5rem 0;
+  }
+  ol.refs>li::before{
+    content:counter(ref,decimal-leading-zero);
+    position:absolute;
+    inset-inline-start:0;
+    top:.1em;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-size:.78rem;
+    color:var(--brass-text);
+  }
+
+  ul.open{list-style:none;padding-inline-start:0}
+  ul.open>li{padding-inline-start:1.7rem;position:relative}
+  ul.open>li::before{
+    content:"؟";
+    position:absolute;
+    inset-inline-start:0;
+    top:-.05em;
+    color:var(--amber);
+    font-weight:700;
+    border:1px solid var(--amber);
+    border-radius:999px;
+    width:1.25rem;height:1.25rem;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.8rem;
+  }
+
+  .t-wrap{
+    overflow-x:auto;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin:1.1rem 0;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.9rem;
+    min-width:34rem;
+  }
+  thead th{
+    background:var(--surface-2);
+    text-align:start;
+    font-weight:600;
+    padding:.7rem .95rem;
+    border-bottom:1px solid var(--line-strong);
+    white-space:nowrap;
+  }
+  td{
+    padding:.68rem .95rem;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.num{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;
+    font-variant-numeric:tabular-nums;
+    color:var(--accent);
+    white-space:nowrap;
+  }
+  .t-narrow table{min-width:0}
+
+  .note{
+    border-inline-start:3px solid var(--brass);
+    background:var(--surface-2);
+    padding:.85rem 1.05rem;
+    border-radius:0 8px 8px 0;
+    color:var(--ink-soft);
+    font-size:.9rem;
+    margin:1rem 0;
+  }
+  .note.warn{border-inline-start-color:var(--amber)}
+  .note strong{color:var(--ink)}
+
+  .toggle{
+    position:fixed;
+    top:.9rem;
+    inset-inline-end:.9rem;
+    z-index:10;
+    background:var(--surface);
+    color:var(--ink-soft);
+    border:1px solid var(--line-strong);
+    border-radius:999px;
+    padding:.35rem .8rem;
+    font:inherit;
+    font-size:.78rem;
+    cursor:pointer;
+  }
+  .toggle:hover{color:var(--accent);border-color:var(--accent)}
+
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:3px;
+  }
+
+  footer{
+    margin-top:4rem;
+    padding-top:1.4rem;
+    border-top:1px solid var(--brass);
+    color:var(--ink-faint);
+    font-size:.8rem;
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:.5rem;
+  }
+
+  @media (max-width:640px){
+    .toc ol{grid-template-columns:1fr}
+    .sec-head{gap:.7rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;scroll-behavior:auto!important}
+  }
+  html{scroll-behavior:smooth}
+</style>
+</head>
+<body>
+
+<button class="toggle" id="themeToggle" aria-pressed="false">تبديل السمة</button>
+
+<div class="doc" dir="rtl" lang="ar">
+
+  <header class="masthead">
+    <p class="eyebrow">تصور منقّح · مسودة للاعتماد</p>
+    <h1>منصة مكتب الهويملي</h1>
+    <p class="office-name">مكتب المحامي عبدالرحمن الهويملي للمحاماة والاستشارات القانونية والتوثيق</p>
+    <div class="meta">
+      <span class="chip"><span class="k">التاريخ</span> 2026-09-08</span>
+      <span class="chip">مستقلة عن منصة سَنَد</span>
+      <span class="chip">أحادية المستأجر</span>
+      <span class="chip">مُيسر · Authentica · Base UI</span>
+    </div>
+    <div class="lede">
+      <p>نسخة منقّحة بناءً على تضييق النطاق المتفق عليه — ثلاث واجهات: بوابة عميل، نظام مكتب داخلي، ولوحة إدارة مخفية.</p>
+      <p>المبدأ الحاكم: كل مخرج آلي مسودة مساعدة فقط، لا يصل العميل ولا يُعتمد إلا بمراجعة المحامي واعتماده.</p>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="المحتويات">
+    <h2>المحتويات</h2>
+    <ol>
+      <li><a href="#s1">الملخص التنفيذي</a></li>
+      <li><a href="#s2">النطاق</a></li>
+      <li><a href="#s3">المبادئ العامة الحاكمة</a></li>
+      <li><a href="#s4">المستخدمون والأدوار</a></li>
+      <li><a href="#s5">بوابة العميل</a></li>
+      <li><a href="#s6">وحدة الاستشارات</a></li>
+      <li><a href="#s7">دراسة القضايا والمستندات</a></li>
+      <li><a href="#s8">صياغة العقود</a></li>
+      <li><a href="#s9">وحدة التوثيق</a></li>
+      <li><a href="#s10">التسجيل العيني للعقار</a></li>
+      <li><a href="#s11">وحدة الحوكمة</a></li>
+      <li><a href="#s12">نظام إدارة المكتب</a></li>
+      <li><a href="#s13">لوحة تحكم الإدارة (Admin)</a></li>
+      <li><a href="#s14">التكاملات</a></li>
+      <li><a href="#s15">الأمن والخصوصية والامتثال</a></li>
+      <li><a href="#s16">ضوابط الذكاء الاصطناعي</a></li>
+      <li><a href="#s17">سير العمل الآلي</a></li>
+      <li><a href="#s18">النموذج التقني المقترح</a></li>
+      <li><a href="#s19">مخطط البيانات المبدئي</a></li>
+      <li><a href="#s20">خارطة الطريق</a></li>
+      <li><a href="#s21">القرارات المُقفلة</a></li>
+      <li><a href="#s22">المخاطر والأسئلة المفتوحة</a></li>
+      <li><a href="#s23">الخلاصة</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <section id="s1">
+      <div class="sec-head"><span class="sec-num">1</span><h2>الملخص التنفيذي</h2></div>
+      <p>منصة داخلية <strong>لمكتب واحد</strong> (أحادية المستأجر)، هدفها ثلاثة أشقّ:</p>
+      <ol class="refs">
+        <li><strong>بوابة عميل خفيفة</strong> تستقبل طلبات: الاستشارات القانونية (مكتوبة/مرئية)، دراسة القضايا والمستندات، صياغة العقود، أعمال التوثيق، التسجيل العيني للعقار، وخدمات الحوكمة.</li>
+        <li><strong>نظام إدارة مكتب داخلي متكامل</strong> يدير العملاء والقضايا والوكالات والاعتراضات والمستندات والمهل والأتعاب والمصروفات والتقارير.</li>
+        <li><strong>لوحة تحكم إدارة (Admin) بمدخل مخفٍ</strong> لإدارة المستخدمين ومحتوى المنصة والتقارير العامة والإشراف على الطلبات.</li>
+      </ol>
+      <p>المبدأ الحاكم: كل مخرج آلي مسودة مساعدة فقط، لا يصل العميل ولا يُعتمد إلا بمراجعة المحامي عبدالرحمن الهويملي واعتماده.</p>
+    </section>
+
+    <section id="s2">
+      <div class="sec-head"><span class="sec-num">2</span><h2>النطاق</h2></div>
+      <h3>داخل النطاق</h3>
+      <ul class="plain">
+        <li>بوابة طلبات العملاء (بلا حساب كامل؛ رابط متابعة + تحقق OTP).</li>
+        <li>وحدات الخدمات: الاستشارات، دراسة القضايا، صياغة العقود، التوثيق، التسجيل العيني، الحوكمة.</li>
+        <li>نظام إدارة المكتب: العملاء، القضايا، الوكالات، الاعتراضات، المستندات، المهل، الأتعاب، المصروفات، التقارير، لوحة التحكم.</li>
+        <li>لوحة تحكم الإدارة (Admin) بمدخل مخفٍ.</li>
+        <li>التكاملات: واتساب المكتب (عبر مزود أعمال معتمد)، زوم، <strong>مُيسر (Moyasar)</strong> للدفع، <strong>Authentica</strong> لرموز التحقق.</li>
+      </ul>
+      <h3>خارج النطاق (مستبعد صراحةً)</h3>
+      <ul class="excluded">
+        <li>مكتبة الأنظمة واللوائح والتعاميم.</li>
+        <li>صياغة مذكرات التقاضي (تحرير دعوى، جوابية، إلحاقية، اعتراض، نقض) وما يتصل بها.</li>
+        <li>الرفع الآلي إلى ناجز/معين.</li>
+        <li>تكامل الفوترة الإلكترونية ZATCA — المكتب غير مسجَّل في ضريبة القيمة المضافة وغير ملزم حالياً.</li>
+        <li>نفاذ (Nafath) — يؤجَّل لمرحلة الوكالات/الرفع الفعلي.</li>
+        <li>لوحة عميل كاملة، وتطبيق الجوال، والواجهة الإنجليزية — مراحل لاحقة.</li>
+      </ul>
+    </section>
+
+    <section id="s3">
+      <div class="sec-head"><span class="sec-num">3</span><h2>المبادئ العامة الحاكمة</h2></div>
+      <p>مرجع موحّد تُبنى عليه كل الوحدات:</p>
+      <ol class="refs">
+        <li><strong>لا مسار إرسال يتجاوز اعتماد المحامي</strong> لأي استشارة أو عقد أو تحليل أو تقرير — ضابط تقني صارم لا سياسة فقط.</li>
+        <li><strong>عقد أتعاب مكتوب</strong> لكل خدمة يحدد النطاق والحدود والمدة وسياسة الإلغاء والاسترداد — لا يكفي «إقرار» في صفحة الدفع.</li>
+        <li><strong>فحص تعارض المصالح</strong> قبل الإسناد وقبل فتح المرفقات للمحامي.</li>
+        <li><strong>حفظ النص الأصلي للعميل</strong> منفصلاً عن أي صياغة مهنية أو إعادة ترتيب.</li>
+        <li><strong>منع اختلاق المراجع أو الوقائع</strong>؛ وسم كل مخرج آلي بوضوح «مسودة غير معتمدة».</li>
+        <li><strong>نظام حماية البيانات الشخصية (PDPL)</strong> كامل التطبيق حتى على النظام الداخلي.</li>
+        <li><strong>سجل تدقيق غير قابل للتعديل</strong> (append-only + تسلسل تجزئة) لكل إجراء ومنفّذه ووقته.</li>
+        <li><strong>الرسوم الحكومية</strong> (توثيق، تسجيل عيني، رفع…) تُعامل كمبالغ مرور لا كإيراد للمكتب، وتُفصل عن أتعاب المكتب.</li>
+        <li><strong>عدم الاعتماد على اللون وحده</strong> لبيان الحالة (اسم نصي دائماً + لون كمؤشر ثانوي)، ومراعاة الوصول لذوي الإعاقة.</li>
+        <li><strong>خطة بديلة مكتوبة</strong> لكل خدمة خارجية (واتساب/زوم/الدفع/رموز التحقق/مزود الذكاء الاصطناعي) عند تعطّلها أو تغيّر واجهتها.</li>
+      </ol>
+    </section>
+
+    <section id="s4">
+      <div class="sec-head"><span class="sec-num">4</span><h2>المستخدمون والأدوار</h2></div>
+      <div class="t-wrap t-narrow">
+        <table>
+          <thead><tr><th>الدور</th><th>الصلاحيات</th></tr></thead>
+          <tbody>
+            <tr><td>مسؤول المنصة (Admin)</td><td>لوحة تحكم مخفية: إدارة المستخدمين والصلاحيات، محتوى المنصة، التقارير العامة، الإشراف على الطلبات. يحمله المحامي عبدالرحمن مبدئياً</td></tr>
+            <tr><td>المحامي (عبدالرحمن الهويملي)</td><td>كامل الصلاحيات التشغيلية، <strong>الاعتماد النهائي لكل مخرج</strong>، تهيئة النظام</td></tr>
+            <tr><td>موظف / مساعد</td><td>استقبال الطلبات، التحقق من السداد، إدخال البيانات، الجدولة، طلب المستندات — <strong>لا يعتمد مخرجات</strong></td></tr>
+            <tr><td>محاسب / فوترة</td><td>الأتعاب، الذمم، المصروفات، التقارير المالية (قد يكون نفس الموظف بدور إضافي)</td></tr>
+            <tr><td>مدقق (قراءة فقط)</td><td>اطلاع على السجلات والتقارير دون تعديل — اختياري</td></tr>
+            <tr><td>العميل</td><td>بلا حساب؛ وصول عبر رابط خاص + رمز تحقق للجوال لمتابعة حالة طلبه فقط</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>جدار أخلاقي:</strong> الصلاحيات على مستوى الملف/القضية، لا على مستوى النظام كله.</p>
+    </section>
+
+    <section id="s5">
+      <div class="sec-head"><span class="sec-num">5</span><h2>بوابة العميل (الواجهة الخارجية)</h2></div>
+
+      <h3>نموذج الطلب متعدد المراحل</h3>
+      <p>شريط تقدّم واضح، ولا انتقال للمرحلة التالية قبل استكمال الحقول الإلزامية:</p>
+      <ol class="steps">
+        <li><strong>نوع الخدمة</strong> والمجال القانوني.</li>
+        <li><strong>بيانات مقدّم الطلب:</strong> الاسم، رقم الجوال (يُتحقق بـ OTP عبر Authentica)، صفة العميل، وبيانات الوكيل إن وُجد.</li>
+        <li><strong>بيانات الطرف الآخر</strong> عند الحاجة (لفحص تعارض المصالح).</li>
+        <li><strong>موضوع الطلب:</strong> أسئلة إرشادية متتابعة + التسلسل الزمني + الطلب/النتيجة المرغوبة. يُحفظ نص العميل الأصلي كما هو.</li>
+        <li><strong>المستندات:</strong> رفع ملفات متعددة (PDF/صور/Word)، تصنيف ووصف وتاريخ كل ملف، فحص فيروسات، قائمة نواقص قبل الإرسال.</li>
+        <li><strong>المراجعة والإقرار:</strong> ملخص كامل قابل للتعديل، إقرار بصحة البيانات، الموافقة على سياسة الخصوصية ونطاق الخدمة، وبيان أن قبول الطلب لا يضمن نتيجة.</li>
+      </ol>
+
+      <h3>مساري التسعير</h3>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>المسار</th><th>متى</th><th>الآلية</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>سعر ثابت (دفع فوري)</strong></td>
+              <td>استشارة مكتوبة بسيطة (حقوقي/عمالي/أحوال شخصية…)، استشارة مرئية 30 أو 60 دقيقة</td>
+              <td>يظهر السعر مباشرة ← رابط دفع فوري عبر مُيسر</td>
+            </tr>
+            <tr>
+              <td><strong>عرض سعر (Quote)</strong></td>
+              <td>استشارة معقّدة، عقود الشركات والعقود المركّبة، التوثيق، التسجيل العيني، الحوكمة</td>
+              <td>طلب + مستندات ← اطلاع المكتب ← عرض سعر يحدد النطاق والمدة والأتعاب ← موافقة العميل ← رابط دفع ← البدء</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>التحقق من السداد (قاعدة المكتب)</h3>
+      <p>بوابة الدفع تؤكد العملية ← الحالة <strong>«مدفوع — بانتظار تحقق الموظف»</strong> ← الموظف المسؤول يؤكد إتمام السداد ← الحالة <strong>«مؤكد — يبدأ العمل وتُحتسب مدة الاستشارة»</strong>.</p>
+
+      <h3>متابعة الحالة والإشعارات</h3>
+      <ul class="plain">
+        <li>رابط متابعة خاص بكل طلب + رمز تحقق للجوال.</li>
+        <li>حالات ظاهرة للعميل: بيانات ناقصة، بانتظار الدفع، مدفوع بانتظار التحقق، مؤكد، تحت الإعداد، بانتظار اعتماد المحامي، جاهز، مغلق.</li>
+        <li>إشعارات عبر واتساب/رسالة نصية بقوالب معتمدة، دون أي بيان سري في نص الرسالة.</li>
+      </ul>
+    </section>
+
+    <section id="s6">
+      <div class="sec-head"><span class="sec-num">6</span><h2>وحدة الاستشارات</h2></div>
+
+      <h3>الأنواع والتسعير</h3>
+      <p class="eyebrow" style="letter-spacing:.1em">الأسعار غير شاملة الضريبة</p>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>الاستشارة</th><th>السعر</th><th>المخرج</th></tr></thead>
+          <tbody>
+            <tr><td>مكتوبة — حقوقي/عمالي/أحوال شخصية وما شابه</td><td class="num">500 ريال</td><td>رد مكتوب معتمد من المحامي</td></tr>
+            <tr><td>مكتوبة — شركات/عقود/ملفات معقّدة</td><td class="num">بعد الاطلاع</td><td>رد مكتوب معتمد (مسار عرض السعر)</td></tr>
+            <tr><td>مرئية — 30 دقيقة (Zoom)</td><td class="num">750 ريال</td><td>جلسة + تقرير خلال 3 أيام عمل كحد أقصى</td></tr>
+            <tr><td>مرئية — 60 دقيقة (Zoom)</td><td class="num">1500 ريال</td><td>جلسة + تقرير خلال 3 أيام عمل</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">للمحامي/الموظف تعديل السعر والمدة لطلب معيّن قبل إرسال رابط الدفع.</p>
+
+      <h3>سياسة الإلغاء وإعادة الجدولة وعدم الحضور</h3>
+      <div class="note warn"><strong>مقترحة — تحتاج إقرار المكتب.</strong>
+        <ul class="plain" style="margin-top:.5rem">
+          <li>إعادة جدولة واحدة مجاناً قبل الموعد بـ 24 ساعة.</li>
+          <li>عدم الحضور دون إشعار: لا استرداد.</li>
+          <li>إلغاء من المكتب: استرداد كامل أو إعادة جدولة باختيار العميل.</li>
+        </ul>
+      </div>
+
+      <h3>سير العمل</h3>
+      <p>استلام الطلب ← فحص تعارض مصالح وبيانات أساسية ← دفع وتحقق الموظف ← (للمرئية) إنشاء اجتماع زوم وإرسال الرابط ← عقد الجلسة/إعداد الرد ← إعادة ترتيب الوقائع وتفريغ الجلسة (ذكاء اصطناعي، مسودة داخلية) ← إعداد المحامي للرد/التقرير واعتماده ← تسليم العميل داخل رابط المتابعة + إشعار ← حفظ نسخة مؤرخة وسجل الاعتماد.</p>
+
+      <h3>دور الذكاء الاصطناعي هنا</h3>
+      <p>إعادة ترتيب وقائع العميل وصياغة وصف مهني (بلا رأي)، وتفريغ جلسة زوم نصياً. <strong>الاثنان مسودة داخلية موسومة «غير معتمدة»، لا تصل العميل إلا بعد اعتماد المحامي.</strong></p>
+    </section>
+
+    <section id="s7">
+      <div class="sec-head"><span class="sec-num">7</span><h2>وحدة دراسة القضايا والمستندات</h2></div>
+      <ul class="plain">
+        <li>المسار: رفع الملف والمستندات ← عرض سعر ← دفع وتحقق ← دراسة.</li>
+        <li>المخرج: <strong>مذكرة دراسة داخلية</strong> تشمل: الأطراف، الوقائع، خط زمني، المستندات مصنّفة ومربوطة بالوقائع، نقاط القوة والضعف بصيغة غير جازمة، النواقص المعلوماتية، وتوصية عملية مع تنبيه بضرورة اعتماد المحامي.</li>
+        <li>ذكاء اصطناعي: تلخيص المستندات واستخراج خط زمني — مسودة داخلية.</li>
+      </ul>
+    </section>
+
+    <section id="s8">
+      <div class="sec-head"><span class="sec-num">8</span><h2>وحدة صياغة العقود</h2></div>
+      <ul class="plain">
+        <li>أنواع مبدئية: <strong>بيع، شراء، شراكة، تخارج، إنشاء تطبيق إلكتروني</strong>، وغيرها — القائمة قابلة للتوسعة.</li>
+        <li><strong>لا توجد قوالب جاهزة</strong>؛ تُبنى مكتبة قوالب المكتب من الصفر كمشروع فرعي ضمن المرحلة 3.</li>
+        <li>المسار: طلب + مدخلات الأطراف والشروط + مستندات ← عرض سعر (للعقود المعقّدة/الشركات) ← دفع ← مسودة أولية من القالب (ذكاء اصطناعي) ← مراجعة واعتماد المحامي ← تسليم Word/PDF.</li>
+        <li>ذكاء اصطناعي: مسودة أولية <strong>من قالب المكتب فقط</strong>، لا صياغة حرة بلا قالب، مع استرجاع محكوم ووسم «غير معتمد».</li>
+      </ul>
+    </section>
+
+    <section id="s9">
+      <div class="sec-head"><span class="sec-num">9</span><h2>وحدة التوثيق</h2></div>
+      <p>الأعمال: <strong>إصدار الوكالات، الإفراغات، الرهون، فك الرهون، الإقرارات المالية</strong>.</p>
+      <p>حقول المعاملة: النوع، الأطراف، المحل (عقار/مبلغ)، رقم المعاملة/الوثيقة، الحالة، <strong>الرسوم الحكومية (منفصلة عن أتعاب المكتب)</strong>، المستندات، تاريخ الإصدار، الموظف المنفّذ.</p>
+      <p class="note">بيانات عالية الحساسية ← تشفير + صلاحيات دقيقة + سجل تدقيق. يجب التحقق من متطلبات ترخيص التوثيق وما يسمح النظام بأتمتته قبل الإطلاق.</p>
+    </section>
+
+    <section id="s10">
+      <div class="sec-head"><span class="sec-num">10</span><h2>وحدة التسجيل العيني للعقار</h2></div>
+      <p>المكتب مرخّص بالتسجيل العيني للعقار. المعاملات: <strong>البيع، الشراء، الإفراغ، الرهن، فك الرهن</strong>، وغيرها مما يتعلق بالعقارات.</p>
+      <p>حقول المعاملة: رقم الصك/الوثيقة، رقم الهوية العقارية، الموقع، الأطراف، القيمة، <strong>الرسوم الحكومية (مرور)</strong>، الحالة، المستندات، تاريخ الإجراء، الموظف المنفّذ.</p>
+    </section>
+
+    <section id="s11">
+      <div class="sec-head"><span class="sec-num">11</span><h2>وحدة الحوكمة</h2></div>
+      <p>المحامي عبدالرحمن حاصل على شهادة <strong>أخصائي حوكمة معتمد</strong> (Kingston Business Academy of Higher Education). تُدرَج خدمات الحوكمة ضمن <strong>مسار عرض السعر</strong>.</p>
+
+      <h3>الخدمات ونماذج التسعير</h3>
+      <p class="eyebrow" style="letter-spacing:.1em">أرقام استرشادية — سوق سعودي، شركة مغلقة صغيرة/متوسطة</p>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>الخدمة</th><th>نموذج التسعير</th><th>نطاق استرشادي</th></tr></thead>
+          <tbody>
+            <tr><td>جلسة استشارية حوكمة (ساعة)</td><td>ضمن باقة المرئية أو أعلى قليلاً</td><td class="num">1,500 – 2,500 ريال</td></tr>
+            <tr><td>تقييم فجوة حوكمة + تقرير توصيات</td><td>سعر ثابت</td><td class="num">15,000 – 40,000 ريال</td></tr>
+            <tr><td>حزمة تأسيس حوكمة (ميثاق مجلس + لوائح لجان المراجعة والترشيحات والمكافآت + 4–6 سياسات + دليل صلاحيات DoA)</td><td>سعر ثابت بحسب الحجم/القطاع</td><td class="num">40,000 – 120,000 ريال</td></tr>
+            <tr><td>حوكمة شركة عائلية / دستور أسرة</td><td>سعر ثابت + مراحل</td><td class="num">60,000 – 250,000+ ريال</td></tr>
+            <tr><td>سكرتير مجلس / متابعة حوكمة مستمرة</td><td>ريتينر شهري</td><td class="num">3,000 – 10,000 ريال/شهر</td></tr>
+            <tr><td>الاستعداد للإدراج (جانب الحوكمة)</td><td>مشروع</td><td class="num">150,000+ ريال</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><strong>تحفّظات:</strong> الأرقام استرشادية وتعتمد على حجم المنشأة وقطاعها وجهتها المنظِّمة (مدرجة/مغلقة/عائلية) ومستوى نضجها. تُحدَّد نهائياً بعد الاطلاع، ويُفضَّل عرض سعر ثابت لكل نطاق مع بيان ما يشمله وما لا يشمله ومدة التنفيذ.</div>
+      <p><strong>إدارة مشروع الحوكمة:</strong> مراحل ومخرجات واعتمادات داخل النظام، مع ربط المستندات والفواتير والمهل.</p>
+    </section>
+
+    <section id="s12">
+      <div class="sec-head"><span class="sec-num">12</span><h2>نظام إدارة المكتب (الواجهة الداخلية)</h2></div>
+
+      <h3>لوحة التحكم</h3>
+      <ul class="plain">
+        <li><strong>عدّاد المراجعين</strong> (سجل استقبال يدوي) و<strong>عدّاد طلبات الأونلاين</strong>.</li>
+        <li>الطلبات <strong>بانتظار التحقق من السداد</strong>.</li>
+        <li><strong>المهل القريبة</strong> (وكالات / اعتراضات / جلسات).</li>
+        <li><strong>المسودات بانتظار اعتماد المحامي</strong>.</li>
+        <li><strong>الأتعاب المستحقة غير المدفوعة</strong> (مع أسماء العملاء).</li>
+      </ul>
+
+      <h3>العملاء</h3>
+      <p>ملف مستقل لكل عميل: الاسم، الهوية/السجل، الجوال، العنوان، الصفة، <strong>مصدر الورود</strong> (مراجعة/أونلاين/إحالة)، الملفات المرتبطة (قضايا/استشارات/عقود/توثيق/تسجيل عيني/حوكمة)، وحالة الأتعاب.</p>
+
+      <h3>القضايا</h3>
+      <p><strong>الحقول:</strong> رقم الملف الداخلي، رقم القضية في ناجز، المحكمة/الدائرة، نوع الدعوى، الخصوم، صفة العميل، قيمة المطالبة، المحامي المسؤول، الحالة، تاريخ القيد، درجة التقاضي الحالية، الجلسات، الأحكام/القرارات الصادرة، المهل الحرجة، المستندات، الأتعاب المتفق عليها/المدفوعة/المتبقية، الوكالة المرتبطة، الاعتراضات المرتبطة، الاستشارة الأصلية (إن تحوّلت لقضية)، ملاحظات داخلية مخفية.</p>
+      <p><strong>الحالات (قائمة قابلة للتهيئة من المدير):</strong> قيد الدراسة، لم تُقيَّد بعد، مقيّدة، مرافعة، صلح، تحقيق، حجز للحكم، صدر الحكم، اعتراض/استئناف، محكمة عليا، تنفيذ، منتهية، محفوظة/مغلقة، معلّقة. لكل حالة اسم نصي + لون (اللون مؤشر ثانوي). القضية المنتهية تظهر بعلامة «منتهية»، والتي في الصلح بعلامة «صلح»، وهكذا.</p>
+
+      <h3>الوكالات</h3>
+      <p>رقم الوكالة، الموكِّل، النطاق، تاريخ الإصدار، <strong>تاريخ الانتهاء، المدة المتبقية (تُحسب تلقائياً)</strong>، القضايا المغطاة، المستندات.</p>
+      <ul class="plain">
+        <li><strong>إدخال يدوي</strong> من الموظف — لا يوجد ربط رسمي متاح مع نظام الوكالات الإلكترونية للجهات الخاصة.</li>
+        <li><strong>الفرز الافتراضي بالأقرب انتهاءً</strong> + فلترة (بالعميل/الحالة/الفترة) + <strong>تذكير تلقائي</strong> قبل الانتهاء بمدة يحددها المكتب.</li>
+      </ul>
+
+      <h3>الاعتراضات</h3>
+      <p>رقم الصك/الحكم، تاريخ التبليغ أو العلم (إدخال)، <strong>مهلة الاعتراض المحسوبة</strong> — تُعرض كتقدير بعلامة <strong>«يتطلب تحقق المحامي»</strong> لا كموعد نهائي قاطع — الحالة، القضية المرتبطة، المستندات. فرز بالأقرب انتهاءً + فلترة.</p>
+
+      <h3>التوثيق / التسجيل العيني / الحوكمة</h3>
+      <p>عرض ملفات كل وحدة بحقولها (المذكورة في البنود 9–11)، ضمن نفس نمط الأيقونات والفلترة.</p>
+
+      <h3>المستندات</h3>
+      <p>مستودع مركزي، تصنيف ووصف، ربط بالملف/الواقعة، إصدارات، فحص فيروسات، أنواع مسموحة، استخراج نص عند الحاجة (OCR للممسوح ضوئياً — دقة متوسطة للعربية).</p>
+
+      <h3>محرك المهل والمواعيد (موحّد)</h3>
+      <p>يجمع: الوكالات + الاعتراضات + الجلسات + مهل عروض الأسعار + مواعيد تسليم التقارير. عرض موحّد + تنبيهات + ثلاث واجهات متخصصة (وكالات/اعتراضات/جلسات).</p>
+
+      <h3>الأتعاب والمصروفات</h3>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>العنصر</th><th>المحتوى</th></tr></thead>
+          <tbody>
+            <tr><td>الأتعاب المدفوعة</td><td>لكل خدمة/ملف، مع تاريخ ووسيلة الدفع</td></tr>
+            <tr><td>أتعاب مستحقة غير مدفوعة</td><td><strong>اسم العميل + المبلغ + تاريخ الاستحقاق + الخدمة</strong> — قائمة ظاهرة في اللوحة</td></tr>
+            <tr><td>المتبقّي على الملف</td><td>الأتعاب المتفق عليها − المدفوع</td></tr>
+            <tr><td>مصروفات المكتب الشهرية</td><td>إدخال بفئات: إيجار، رواتب، اشتراكات، رسوم حكومية، أخرى</td></tr>
+            <tr><td>التقرير السنوي</td><td>إجمالي الإيرادات − إجمالي المصروفات = صافي الربح، قابل للتصدير PDF/Excel</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note warn"><strong>تنبيه:</strong> محاسبة مبسّطة لأغراض إدارة المكتب، وليست بديلاً عن نظام محاسبي معتمد أو مراجعة حسابات.</div>
+
+      <h3>التقارير</h3>
+      <ul class="plain">
+        <li>عدد العملاء والقضايا حسب الحالة/النوع/الفترة.</li>
+        <li>الطلبات الواردة (أونلاين مقابل مراجعة).</li>
+        <li>مؤشرات الأداء: متوسط زمن الرد، عدد الاستشارات المنجزة، الالتزام بمهلة التقرير (3 أيام).</li>
+        <li>التقرير المالي السنوي.</li>
+      </ul>
+    </section>
+
+    <section id="s13">
+      <div class="sec-head"><span class="sec-num">13</span><h2>لوحة تحكم الإدارة (Admin) — مدخل مخفٍ</h2></div>
+
+      <h3>الطبيعة والوصول</h3>
+      <ul class="plain">
+        <li>كونسول <strong>منفصل</strong> عن واجهة إدارة المكتب التشغيلية، على <strong>مدخل مخفٍ</strong> (نطاق فرعي/مسار غير مُعلن، غير مرتبط بأي رابط من المنصة العامة، ومستبعَد من فهرسة محركات البحث عبر <code>robots</code> وترويسات <code>noindex</code>).</li>
+        <li><strong>تسجيل دخول مستقل</strong> باسم مستخدم وكلمة مرور + <strong>مصادقة متعددة العوامل إلزامية</strong> (OTP عبر Authentica)، مع تحديد معدل المحاولات وقفل مؤقت بعد محاولات فاشلة، وتسجيل كل محاولة دخول في سجل التدقيق.</li>
+        <li>الدور: <strong>مسؤول المنصة (Admin)</strong>، يحمله المحامي عبدالرحمن مبدئياً، ومفصول صلاحياً عن دور «موظف».</li>
+      </ul>
+
+      <h3>الصفحات</h3>
+      <ol class="refs">
+        <li><strong>تقارير عامة</strong> مع فرز بالتاريخ (من/إلى): <strong>الإيرادات</strong> (المدفوعات المكتملة عبر مُيسر) بحسب الخدمة والفترة؛ <strong>الطلبات الواردة الجديدة</strong> بحسب المصدر (أونلاين/مراجعة/إحالة) والفترة؛ <strong>تغييرات كتالوج الخدمات/الباقات</strong> (ما أُضيف/عُدِّل/أُوقف)؛ تصدير PDF/Excel.</li>
+        <li><strong>إدارة المستخدمين:</strong> تصفّح ملفات المستخدمين (حسابات الموظفين + سجلات جهات اتصال العملاء)، تعديل البيانات، تفعيل/تعطيل حساب، إعادة تعيين كلمة المرور، إدارة الأدوار والصلاحيات. كل تعديل يُسجَّل في سجل التدقيق مع المنفِّذ والوقت.</li>
+        <li><strong>إدارة الطلبات:</strong> قائمة بآخر الطلبات وحالاتها، <strong>فرز بالحالة وبالتاريخ</strong>، فتح تفاصيل الطلب، تتبّع مسار الدفع والاعتماد. (إشراف واطلاع؛ الاعتماد المهني يبقى بيد المحامي.)</li>
+        <li><strong>التحكم في محتوى المنصة:</strong> صورة البانر في الصفحة الرئيسية، الأقسام/المسارات المعروضة وترتيبها، النصوص التعريفية لكل خدمة، الأسعار المعروضة للباقات الثابتة، والأسئلة الشائعة. تغييرات المحتوى تمرّ <strong>بمعاينة قبل النشر</strong> وتُحفظ بإصدارات.</li>
+      </ol>
+
+      <h3>ملاحظة على المصطلحات</h3>
+      <p>مصطلحات «المبيعات / التسجيلات / السلع» مأخوذة من نموذج متجر إلكتروني عام. في سياق مكتب المحاماة تُقرأ: <strong>الإيرادات من الخدمات</strong>، <strong>الطلبات الواردة</strong>، و<strong>كتالوج الخدمات/الباقات</strong> — لا يوجد كتالوج «سلع» بالمعنى التجاري.</p>
+    </section>
+
+    <section id="s14">
+      <div class="sec-head"><span class="sec-num">14</span><h2>التكاملات</h2></div>
+
+      <h3>واتساب المكتب</h3>
+      <p>مزود أعمال معتمد (BSP)، قوالب رسائل مُوافَق عليها مسبقاً، موافقة العميل (opt-in)، <strong>ومنع أي بيان سري في نص الرسالة</strong> (البيانات تمر عبر Meta).</p>
+      <p>الاستخدامات: تأكيد الطلب، طلب المستندات الناقصة، رابط الدفع، تأكيد الموعد ورابط زوم، تحديثات الحالة، التذكيرات.</p>
+
+      <h3>زوم</h3>
+      <p>إنشاء الاجتماع تلقائياً <strong>بعد الدفع وتأكيد الموعد</strong> من حساب المكتب، إرسال الرابط للعميل والمحامي، تذكير قبل الموعد، تتبّع حالات الموعد (محجوز/مؤكد/بدأ/انتهى/أُعيدت جدولته/أُلغي). <strong>التسجيل معطّل افتراضياً</strong>؛ إن استُخدم فبموافقة صريحة من الطرفين وسياسة حفظ محددة.</p>
+
+      <h3>مزود الدفع — مُيسر (Moyasar)</h3>
+      <ul class="plain">
+        <li>بوابة الدفع المعتمدة: <strong>مُيسر</strong>، تدعم <strong>مدى، البطاقات الائتمانية، Apple Pay، STC Pay</strong>.</li>
+        <li>يُستخدَم skill الربط من مستودع <code>khaled-harthi/saudi-skills</code> عند التنفيذ (<code>/plugin install moyasar</code>).</li>
+        <li>استقبال تأكيد الدفع عبر webhook، مفتاح idempotency، منع تكرار الخصم، مسار استرداد واضح.</li>
+        <li><strong>لا تُخزَّن بيانات البطاقات في المنصة</strong> (تبقى لدى مُيسر بصفته الملتزم بمعيار PCI-DSS).</li>
+      </ul>
+
+      <h3>رموز التحقق — Authentica</h3>
+      <ul class="plain">
+        <li>إرسال <strong>رمز التحقق للجوال (OTP عبر SMS)</strong> عبر <strong>Authentica</strong>: تحقق جوال العميل عند تقديم الطلب ومتابعة الحالة، و<strong>مصادقة ثنائية (2FA)</strong> لحسابات المكتب ولوحة الإدارة.</li>
+        <li>يُستخدَم skill الربط من نفس المستودع (<code>/plugin install authentica-otp</code>).</li>
+        <li>انتهاء صلاحية الرمز، حدّ لمحاولات الإدخال، وتحديد معدل الإرسال لكل رقم.</li>
+      </ul>
+
+      <h3>الفاتورة</h3>
+      <p>فاتورة/إيصال إلكتروني <strong>بسيط بلا بند ضريبة</strong>، مربوط برقم الطلب وملف العميل، ومنع تكرار الإصدار عند إعادة التحميل.</p>
+    </section>
+
+    <section id="s15">
+      <div class="sec-head"><span class="sec-num">15</span><h2>الأمن والخصوصية والامتثال</h2></div>
+
+      <h3>كلمات المرور والحسابات</h3>
+      <ul class="plain">
+        <li>تُخزَّن <strong>جميع</strong> كلمات مرور الحسابات (الإدارة والموظفين) بخوارزمية تجزئة مخصّصة لكلمات المرور (<strong>bcrypt</strong> أو <strong>Argon2id</strong>) بملح فريد لكل مستخدم — <strong>لا تشفير قابل للعكس ولا تخزين نصّي</strong>.</li>
+        <li>سياسة قوة كلمة مرور، قفل بعد محاولات فاشلة، تحديد معدل تسجيل الدخول، ومصادقة متعددة العوامل لحسابات الإدارة والمكتب.</li>
+      </ul>
+
+      <h3>الصور والملفات المرفوعة</h3>
+      <ul class="plain">
+        <li>عند رفع صور الواجهة (البانر، الصور الرمزية، الصور التعريفية): <strong>ضغط وتصغير من جهة الخادم دون إضرار بالجودة الظاهرة</strong> — تحجيم لأبعاد قصوى معقولة، توليد أحجام متجاوبة (مصغّرة/عرض/أصلية)، تحويل إلى صيغة حديثة (WebP/AVIF) مع بديل، <strong>إزالة بيانات EXIF</strong> (بينها الموقع الجغرافي) للخصوصية، وتحميل مؤجَّل (lazy-load) في الواجهة.</li>
+        <li><strong>استثناء:</strong> مسوحات المستندات والأدلة القانونية <strong>لا تُضغط ضغطاً فاقداً</strong>؛ تُحفظ بدقتها الأصلية (الضغط للصور التسويقية/الواجهة فقط).</li>
+        <li>فحص فيروسات لكل ملف، أنواع مسموحة محدّدة، حدّ لحجم الملف.</li>
+      </ul>
+
+      <h3>الامتثال النظامي</h3>
+      <ul class="plain">
+        <li><strong>PDPL:</strong> أساس نظامي لكل معالجة، سجل أنشطة المعالجة، تقييم أثر لحماية البيانات، إجراء إشعار تسرب خلال 72 ساعة، آلية تنفيذ حقوق صاحب البيانات (وصول/تصحيح/حذف)، ضوابط النقل خارج المملكة. بيانات الهوية والصكوك والإقرارات المالية = <strong>بيانات حساسة</strong>.</li>
+        <li><strong>نظام المحاماة ولائحته وقواعد الهيئة السعودية للمحامين:</strong> لا ممارسة بلا ترخيص (لا رأي آلي يصل العميل)، سرية المهنة، ومراجعة قواعد الإعلان الإلكتروني قبل الإطلاق (لا ضمان نتيجة، لا مقارنات مضللة).</li>
+        <li><strong>التوقيع الإلكتروني:</strong> تمييز الإقرار البسيط عن التوقيع الرقمي المعتمد؛ ختم زمني لاعتمادات المحامي وإقرارات العميل.</li>
+      </ul>
+
+      <h3>البنية والتشغيل</h3>
+      <ul class="plain">
+        <li><strong>الاستضافة داخل المملكة</strong>، مع تطبيق ضوابط الهيئة الوطنية للأمن السيبراني (ECC) وتصنيف البيانات والإطار التنظيمي للحوسبة السحابية.</li>
+        <li>تشفير أثناء النقل والتخزين، صلاحيات دقيقة، عزل ملفات كل عميل.</li>
+        <li><strong>اتفاقية معالجة بيانات مع مزود الذكاء الاصطناعي</strong> تنص على عدم الاحتفاظ وعدم التدريب وتحديد موقع المعالجة، وإدراجه كمعالِج ثانوي في سجل PDPL. منع استخدام بيانات العملاء لتدريب أي نموذج.</li>
+        <li>نسخ احتياطية وخطة استعادة مُختبرة دورياً بأهداف RTO/RPO، وسياسة احتفاظ وحذف مرتبطة بمدد التقادم والالتزامات المهنية.</li>
+        <li>سجل تدقيق append-only + تسلسل تجزئة.</li>
+        <li>تحديد المعدل ومكافحة الإساءة على البوابة العامة، وسياسة الطلبات الوهمية واستهلاك الموارد قبل الدفع.</li>
+        <li>SPF/DKIM/DMARC ومزود بريد معاملاتي.</li>
+      </ul>
+    </section>
+
+    <section id="s16">
+      <div class="sec-head"><span class="sec-num">16</span><h2>ضوابط الذكاء الاصطناعي</h2></div>
+      <ul class="plain">
+        <li><strong>استرجاع محكوم (RAG)</strong> من قوالب المكتب والمستندات المرفوعة فقط، مع إظهار الاستشهاد ورفض الإجابة عند غياب المصدر.</li>
+        <li><strong>عزل محتوى المستندات المرفوعة كبيانات لا كأوامر</strong> (حماية من حقن الأوامر عبر ملفات العملاء).</li>
+        <li>وسم كل مخرج «مسودة غير معتمدة».</li>
+        <li>منظومة تقييم دورية (هلوسة، اقتباس خاطئ) قبل كل إطلاق.</li>
+        <li><strong>الاستخدامات المفعّلة (الأربعة):</strong> (1) إعادة ترتيب وقائع العميل وصياغة وصف مهني بلا رأي، (2) تلخيص مستندات القضية واستخراج خط زمني، (3) تفريغ جلسات زوم نصياً، (4) مسودة أولية للعقد من قوالب المكتب. <strong>جميعها مخرجات داخلية خلف اعتماد المحامي.</strong></li>
+      </ul>
+    </section>
+
+    <section id="s17">
+      <div class="sec-head"><span class="sec-num">17</span><h2>سير العمل الآلي (من الطلب إلى الإغلاق)</h2></div>
+      <ol class="steps">
+        <li>استلام الطلب ← رقم طلب + ملف مبدئي.</li>
+        <li>فحص آلي للحقول والمستندات الإلزامية + قائمة نواقص.</li>
+        <li>فحص تعارض المصالح.</li>
+        <li>تحديد المسار (سعر ثابت / عرض سعر).</li>
+        <li>الدفع عبر مُيسر ← <strong>تحقق الموظف من إتمام السداد</strong>.</li>
+        <li>إنشاء ملف الخدمة/القضية + قائمة مهام.</li>
+        <li>تجهيز ملخص/خط زمني/مسودة (ذكاء اصطناعي، غير معتمد).</li>
+        <li><strong>مراجعة واعتماد المحامي.</strong></li>
+        <li>تسليم العميل (تقرير/عقد/استشارة) داخل رابط المتابعة + إشعار — مع منع إرسال أي معلومة غير معتمدة.</li>
+        <li>تحديث الأتعاب، إنشاء تذكيرات المهل، الأرشفة، وحفظ سجل التدقيق.</li>
+      </ol>
+    </section>
+
+    <section id="s18">
+      <div class="sec-head"><span class="sec-num">18</span><h2>النموذج التقني المقترح</h2></div>
+      <ul class="plain">
+        <li>تطبيق ويب متجاوب (عربي RTL؛ الإنجليزية مرحلة لاحقة)، بثلاث واجهات منفصلة: <strong>بوابة العميل</strong>، <strong>نظام المكتب الداخلي</strong>، <strong>لوحة الإدارة المخفية</strong>.</li>
+        <li>الواجهات مبنية على <strong>Base UI</strong> (مكوّنات React غير المنسّقة) مع <strong>تخصيص كامل بهوية المنصة</strong> (نظام الألوان والخطوط العربية المعتمد)، وحالات تركيز ظاهرة، ودعم قارئ الشاشة، ودعم RTL.</li>
+        <li>قاعدة بيانات علائقية واحدة + مستودع مستندات + طبقة تكاملات (واتساب/زوم/مُيسر/Authentica).</li>
+        <li><strong>مُيسر (Moyasar)</strong> للمدفوعات و<strong>Authentica</strong> لرموز التحقق، عبر skills مستودع <code>khaled-harthi/saudi-skills</code> (<code>/plugin marketplace add khaled-harthi/saudi-skills</code> ثم <code>/plugin install moyasar</code> و<code>/plugin install authentica-otp</code>).</li>
+        <li>طبقة ذكاء اصطناعي عبر مزود ملتزم باتفاقية معالجة (بلا احتفاظ/تدريب).</li>
+        <li>بيئات منفصلة (تطوير/اختبار/إنتاج)، نسخ احتياطية، مراقبة وتنبيهات.</li>
+        <li>استضافة داخل المملكة.</li>
+      </ul>
+    </section>
+
+    <section id="s19">
+      <div class="sec-head"><span class="sec-num">19</span><h2>مخطط البيانات المبدئي (الكيانات)</h2></div>
+      <p>عميل، جهة اتصال، طلب، خدمة/باقة، استشارة، قضية، جلسة، وكالة، اعتراض، معاملة توثيق، معاملة تسجيل عيني، مشروع حوكمة، مستند، عرض سعر، دفعة، فاتورة، مصروف، مهمة، تذكير، مستخدم، دور/صلاحية، محتوى صفحة (بانر/قسم)، سجل تدقيق.</p>
+      <p><strong>علاقات أساسية:</strong> العميل ← له عدة ملفات (قضايا/استشارات/…)؛ الطلب ← يُنشئ خدمة/قضية؛ القضية ← ترتبط بوكالة واحدة أو أكثر واعتراضات وجلسات ومستندات ودفعات؛ كل إجراء ← يُسجَّل في سجل التدقيق.</p>
+    </section>
+
+    <section id="s20">
+      <div class="sec-head"><span class="sec-num">20</span><h2>خارطة الطريق</h2></div>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>المرحلة</th><th>المحتوى</th></tr></thead>
+          <tbody>
+            <tr><td><strong>1 — نواة المكتب الداخلية + لوحة الإدارة</strong></td><td>العملاء + القضايا بحالات قابلة للتهيئة + مستودع المستندات + محرك المهل (وكالات/اعتراضات/جلسات) + الأتعاب والمصروفات + لوحة التحكم والتقارير + الأدوار + سجل التدقيق + <strong>لوحة الإدارة المخفية</strong> (المستخدمون، التقارير العامة، إدارة الطلبات، محتوى المنصة) + واتساب للإشعارات + <strong>Authentica</strong> لتسجيل الدخول الآمن</td></tr>
+            <tr><td><strong>2 — بوابة الاستشارات</strong></td><td>نموذج طلب (مكتوبة/مرئية) + OTP + فحص تعارض + عقد أتعاب + مساري الدفع + <strong>ربط مُيسر</strong> + تحقق الموظف + ربط زوم + اعتماد المحامي + التقرير + الفاتورة</td></tr>
+            <tr><td><strong>3 — دراسة القضايا + صياغة العقود</strong></td><td>كخدمات مدفوعة + بناء مكتبة قوالب العقود من الصفر</td></tr>
+            <tr><td><strong>4 — التوثيق + التسجيل العيني + الحوكمة</strong></td><td>ضمن مسار عرض السعر + تقارير متقدمة + أتمتة أوسع</td></tr>
+            <tr><td><strong>لاحقاً</strong></td><td>لوحة عميل كاملة، نفاذ، تطبيق جوال، الواجهة الإنجليزية</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s21">
+      <div class="sec-head"><span class="sec-num">21</span><h2>القرارات المُقفلة</h2></div>
+      <div class="t-wrap">
+        <table>
+          <thead><tr><th>#</th><th>القرار</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td>منصة مستقلة تماماً عن سَنَد، لمكتب واحد (أحادية المستأجر)</td></tr>
+            <tr><td class="num">2</td><td>مستبعد: مكتبة الأنظمة، ومذكرات التقاضي وما يتصل بها</td></tr>
+            <tr><td class="num">3</td><td>حسابات العميل: <strong>خفيفة</strong> (رابط + OTP)، لا لوحة عميل كاملة الآن</td></tr>
+            <tr><td class="num">4</td><td>نفاذ: مؤجّل؛ يكفي OTP + تحقق الموظف يدوياً من الهوية عند الحاجة</td></tr>
+            <tr><td class="num">5</td><td>التسعير: باقات ثابتة + إمكانية تعديل السعر/المدة لكل طلب</td></tr>
+            <tr><td class="num">6</td><td>مكتوبة 500 ريال (بسيطة) / بعد الاطلاع (معقّدة)؛ مرئية 750 (نصف ساعة) و1500 (ساعة)</td></tr>
+            <tr><td class="num">7</td><td>تقرير الجلسة المرئية: خلال 3 أيام عمل كحد أقصى</td></tr>
+            <tr><td class="num">8</td><td>الأسعار <strong>غير شاملة الضريبة</strong>؛ المكتب غير مسجَّل بالضريبة وغير ملزم؛ لا تكامل ZATCA</td></tr>
+            <tr><td class="num">9</td><td>الاستشارات يقدّمها المحامي عبدالرحمن؛ إسناد داخلي؛ العميل يختار المجال لا الشخص</td></tr>
+            <tr><td class="num">10</td><td>الذكاء الاصطناعي: الاستخدامات الأربعة مفعّلة، كلها خلف اعتماد المحامي</td></tr>
+            <tr><td class="num">11</td><td>قوالب العقود: تُبنى من الصفر</td></tr>
+            <tr><td class="num">12</td><td>إضافة وحدات: التوثيق، التسجيل العيني للعقار، الحوكمة (ضمن مسار عرض السعر)</td></tr>
+            <tr><td class="num">13</td><td>إضافة وحدة الأتعاب والمصروفات + التقرير المالي السنوي</td></tr>
+            <tr><td class="num">14</td><td>الاعتماد لا يبدأ إلا بعد الدفع <strong>وتحقق الموظف</strong> من إتمام السداد</td></tr>
+            <tr><td class="num">15</td><td>لا يوجد موقع إلكتروني حالي للمكتب</td></tr>
+            <tr><td class="num">16</td><td>بوابة الدفع: <strong>مُيسر (Moyasar)</strong> — مدى / بطاقات / Apple Pay / STC Pay</td></tr>
+            <tr><td class="num">17</td><td>رموز التحقق: <strong>Authentica</strong> (OTP عبر SMS) — لتحقق العميل و2FA للمكتب والإدارة</td></tr>
+            <tr><td class="num">18</td><td>الواجهات: مبنية على <strong>Base UI</strong> مع تخصيص بهوية المنصة (React، RTL)</td></tr>
+            <tr><td class="num">19</td><td><strong>لوحة تحكم إدارة (Admin) بمدخل مخفٍ</strong> وتسجيل دخول مستقل + MFA</td></tr>
+            <tr><td class="num">20</td><td>كلمات المرور: تجزئة <strong>bcrypt / Argon2id</strong> (لا تشفير قابل للعكس)</td></tr>
+            <tr><td class="num">21</td><td><strong>ضغط وتصغير الصور</strong> المرفوعة تلقائياً (عدا مسوحات الأدلة القانونية)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="s22">
+      <div class="sec-head"><span class="sec-num">22</span><h2>المخاطر والأسئلة المفتوحة</h2></div>
+      <ul class="open">
+        <li><strong>ترتيب الأرشيف الورقي</strong> للمكتب: مؤجّل؛ يرتّبه المكتب وينسخه لاحقاً، ثم تُصمَّم الفهرسة ويُصمَّم مخطط البيانات أولاً ثم يُفرّغ فيه (يُفضَّل البدء بدفعة تجريبية صغيرة).</li>
+        <li><strong>السياسات النهائية:</strong> الباقات المعقّدة، وسياسة الإلغاء/الاسترداد/عدم الحضور — مقترحة هنا وتحتاج إقرار المكتب.</li>
+        <li><strong>الاختيارات التقنية المتبقية:</strong> مزود واتساب (BSP)، نوع حساب زوم، مزود الذكاء الاصطناعي واتفاقية المعالجة، مزود الاستضافة داخل المملكة.</li>
+        <li><strong>مراجعة نظامية قبل الإطلاق:</strong> قواعد الهيئة السعودية للمحامين بشأن الإعلان الإلكتروني وتقديم الخدمات عبر منصة؛ متطلبات ترخيص التوثيق والتسجيل العيني وما يسمح النظام بأتمتته.</li>
+        <li><strong>الضريبة مستقبلاً:</strong> عند تجاوز إيراد المكتب حد التسجيل الإلزامي (375,000 ريال سنوياً) يلزم التسجيل وإضافة الفوترة المتوافقة.</li>
+      </ul>
+    </section>
+
+    <section id="s23">
+      <div class="sec-head"><span class="sec-num">23</span><h2>الخلاصة</h2></div>
+      <p>بعد التضييق، صارت المنصة منتجاً واحداً واضحاً بثلاث واجهات: <strong>بوابة طلبات خفيفة + نظام إدارة مكتب داخلي + لوحة إدارة مخفية</strong>، تغطي الاستشارات ودراسة القضايا وصياغة العقود والتوثيق والتسجيل العيني والحوكمة، مع محرك مهل موحّد يمنع فوات أي موعد، ووحدة أتعاب ومصروفات تُخرج تقريراً سنوياً بالأرباح، وتكامل دفع عبر <strong>مُيسر</strong> وتحقق عبر <strong>Authentica</strong>.</p>
+      <p>عوامل النجاح: بناء النواة الداخلية أولاً، وصرامة قاعدة «لا مخرج يصل العميل دون اعتماد المحامي»، وحماية سرية الملفات، والالتزام بمساري تسعير واضحين (سعر ثابت / عرض سعر).</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>منصة مكتب المحامي عبدالرحمن الهويملي</span>
+    <span>تصور منقّح · مسودة للاعتماد · 2026-09-08</span>
+  </footer>
+
+</div>
+
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = null;
+    try { stored = localStorage.getItem('huw-theme'); } catch(e){}
+    if (stored === 'dark' || stored === 'light') root.setAttribute('data-theme', stored);
+    function sync(){
+      var isDark = root.getAttribute('data-theme') === 'dark' ||
+        (!root.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      btn.setAttribute('aria-pressed', String(isDark));
+      btn.textContent = isDark ? 'الوضع الفاتح' : 'الوضع الداكن';
+    }
+    btn.addEventListener('click', function(){
+      var isDark = root.getAttribute('data-theme') === 'dark' ||
+        (!root.hasAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = isDark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('huw-theme', next); } catch(e){}
+      sync();
+    });
+    sync();
+  })();
+</script>
+
+</body>
+</html>
